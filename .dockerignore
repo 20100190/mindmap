@@ -1,0 +1,5 @@
+/__pycache__
+*.pyc
+.env
+/app/logs/
+query_result_*.json
