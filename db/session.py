@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+import asyncio
 from sqlalchemy.orm import declarative_base
 from google.cloud.sql.connector import Connector, IPTypes
 import os
@@ -20,23 +21,23 @@ elif os.getenv('ENV', 'PROD') == "PROD":
 
     # A function to get a connection from the connector
     # asyncpg is the driver for asynchronous connections
-    def get_connection():
-        return connector.connect(
-            CONNECTION_NAME,
-            "asyncpg",
-            user=os.environ.get("DB_USER_PROD"),
-            #database=os.environ.get("DB_NAME"),
-            db=os.environ.get('DB_NAME'),
-            enable_iam_auth=True, # This is the key part for IAM authentication
-        )
-    
-    # Create the SQLAlchemy engine with the connector
-    engine = create_async_engine(
-        "postgresql+asyncpg://", 
-        creator=get_connection,
-        echo=False
-    )
+    def get_sync_connection():
+        async def connect_async():
+            return await connector.connect(
+                CONNECTION_NAME,
+                driver="asyncpg",
+                user=os.environ.get("DB_USER_PROD"),
+                db=os.environ.get("DB_NAME"),
+                enable_iam_auth=True,
+            )
+        return asyncio.get_event_loop().run_until_complete(connect_async())
 
+    # SQLAlchemy async engine using custom connection
+    engine = create_async_engine(
+        "postgresql+asyncpg://",  # Leave blank, overridden by creator
+        async_creator=get_sync_connection,
+        echo=False,
+    )
 
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
