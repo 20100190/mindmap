@@ -3,3 +3,5 @@
 .env
 logs/
 query_result_*.json
+llm-mindmap-994f4cc70a7e.json
+/secrets/
