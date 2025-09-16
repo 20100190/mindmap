@@ -6,7 +6,7 @@ import os
 
 CONNECTION_NAME = os.environ.get("CONNECTION_NAME")
 
-if os.getenv('ENV') == "LOCAL":
+if os.getenv('ENV', 'PROD') == "LOCAL":
     DATABASE_URL = (
         f"postgresql+asyncpg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
         f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
@@ -14,7 +14,7 @@ if os.getenv('ENV') == "LOCAL":
     engine = create_async_engine(DATABASE_URL, echo=False)
 
 # The database connection for production
-elif os.getenv('ENV') == "PROD":
+elif os.getenv('ENV', 'PROD') == "PROD":
     # Initialize a Connector object
     connector = Connector(IPTypes.PRIVATE if CONNECTION_NAME.split(':')[-1].lower() == 'private' else IPTypes.PUBLIC)
 

@@ -1,0 +1,33 @@
+steps:
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/mindmap:$SHORT_SHA
+      - .
+
+  # Step 2: Push Docker image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - push
+      - gcr.io/$PROJECT_ID/mindmap:$SHORT_SHA
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - mindmap
+      - --image=gcr.io/$PROJECT_ID/mindmap:$SHORT_SHA
+      - --region=europe-west1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --update-secrets=OPENAI_API_KEY=OPENAI_API_KEY:latest,CONNECTION_NAME=CONNECTION_NAME:latest,DB_USER_PROD=DB_USER_PROD:latest
+
+images:
+  - gcr.io/$PROJECT_ID/mindmap:$SHORT_SHA
+
+options:
+  logging: CLOUD_LOGGING_ONLY
