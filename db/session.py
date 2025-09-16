@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import asyncio
 from sqlalchemy.orm import declarative_base
-from google.cloud.sql.connector import Connector, IPTypes
+from google.cloud.sql.connector import Connector, IPTypes, ConnectorAsync
 import os
 
 
@@ -22,7 +22,7 @@ elif os.getenv('ENV', 'PROD') == "PROD":
     # A function to get a connection from the connector
     # asyncpg is the driver for asynchronous connections
     async def get_async_connection():
-        return await connector.connect(
+        return connector.connect_async(
             CONNECTION_NAME,
             driver="asyncpg",
             user=os.getenv('DB_USER_PROD'),
