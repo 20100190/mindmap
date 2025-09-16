@@ -22,7 +22,7 @@ else:
     # A function to get a connection from the connector
     # asyncpg is the driver for asynchronous connections
     async def get_async_connection():
-        return connector.connect_async(
+        return await connector.connect_async(
             CONNECTION_NAME,
             driver="asyncpg",
             user=os.getenv('DB_USER_PROD'),
