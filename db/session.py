@@ -26,6 +26,7 @@ elif os.getenv('ENV', 'PROD') == "PROD":
             "asyncpg",
             user=os.environ.get("DB_USER_PROD"),
             database=os.environ.get("DB_NAME"),
+            db=os.environ.get('DB_NAME'),
             enable_iam_auth=True, # This is the key part for IAM authentication
         )
     
