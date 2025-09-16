@@ -24,7 +24,7 @@ steps:
       - --region=europe-west1
       - --platform=managed
       - --allow-unauthenticated
-      - --update-secrets=OPENAI_API_KEY=OPENAI_API_KEY:latest,CONNECTION_NAME=CONNECTION_NAME:latest,DB_USER_PROD=DB_USER_PROD:latest
+      - --update-secrets=OPENAI_API_KEY=OPENAI_API_KEY:latest,CONNECTION_NAME=CONNECTION_NAME:latest,DB_USER_PROD=DB_USER_PROD:latest,DB_NAME=DB_NAME:latest
 
 images:
   - gcr.io/$PROJECT_ID/mindmap:$SHORT_SHA
