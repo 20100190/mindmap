@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import asyncio
 from sqlalchemy.orm import declarative_base
-from google.cloud.sql.connector import Connector, IPTypes, ConnectorAsync
+from google.cloud.sql.connector import Connector, IPType
 import os
 
 
