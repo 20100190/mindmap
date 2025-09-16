@@ -33,7 +33,7 @@ elif os.getenv('ENV', 'PROD') == "PROD":
     # SQLAlchemy async engine using custom connection
     engine = create_async_engine(
         "postgresql+asyncpg://",  # Leave blank, overridden by creator
-        async_creator=get_sync_connection,
+        async_creator=get_async_connection,
         echo=False,
     )
 
