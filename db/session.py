@@ -21,16 +21,14 @@ elif os.getenv('ENV', 'PROD') == "PROD":
 
     # A function to get a connection from the connector
     # asyncpg is the driver for asynchronous connections
-    def get_sync_connection():
-        async def connect_async():
-            return await connector.connect(
-                CONNECTION_NAME,
-                driver="asyncpg",
-                user=os.environ.get("DB_USER_PROD"),
-                db=os.environ.get("DB_NAME"),
-                enable_iam_auth=True,
-            )
-        return asyncio.get_event_loop().run_until_complete(connect_async())
+    async def get_async_connection():
+        return await connector.connect(
+            CONNECTION_NAME,
+            driver="asyncpg",
+            user=os.getenv('DB_USER_PROD'),
+            db=os.getenv('DB_NAME'),
+            enable_iam_auth=True,
+        )
 
     # SQLAlchemy async engine using custom connection
     engine = create_async_engine(
