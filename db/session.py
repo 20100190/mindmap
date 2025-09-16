@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import asyncio
 from sqlalchemy.orm import declarative_base
-from google.cloud.sql.connector import Connector, IPType
+from google.cloud.sql.connector import Connector, IPTypes
 import os
 
 
@@ -15,7 +15,7 @@ if os.getenv('ENV', 'PROD') == "LOCAL":
     engine = create_async_engine(DATABASE_URL, echo=False)
 
 # The database connection for production
-elif os.getenv('ENV', 'PROD') == "PROD":
+else:
     # Initialize a Connector object
     connector = Connector(IPTypes.PRIVATE if CONNECTION_NAME.split(':')[-1].lower() == 'private' else IPTypes.PUBLIC)
 
