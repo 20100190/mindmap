@@ -6,9 +6,10 @@ openai==1.107.3
 protobuf==6.32.1
 pydantic==2.11.9
 python-dotenv==1.1.1
-SQLAlchemy==2.0.27
+SQLAlchemy==2.0.43
 uvicorn==0.35.0
 google-auth==2.38.0
 cloud-sql-python-connector==1.18.4
 asyncpg==0.30.0
+aiosqlite==0.21.0
 google-cloud-storage==3.3.1

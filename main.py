@@ -1,31 +1,43 @@
-from dotenv import load_dotenv
 import os
-import gunicorn
-load_dotenv(dotenv_path="/Users/usman/Downloads/0.DataScience/portfolio/mindmap/.env")
-
-
-from fastapi import FastAPI
-from api import query
-from logs_management import log_manager
 import logging
+from fastapi import FastAPI
 
-log_manager.setup_logging()
+# Import configuration (loads environment)
+from core.config import config
 
+# Import new API structure
+from api.v1 import v1_router
 
-app = FastAPI()
+# Import logging setup
+from infrastructure.logging.config import setup_logging
 
-app.include_router(query.router)
+# Setup logging
+setup_logging()
+logger = logging.getLogger(__name__)
+
+# Initialize FastAPI app
+app = FastAPI(
+    title="Mindmap API",
+    description="API for generating structured mindmaps from user queries",
+    version="2.0.0"
+)
+
+# Include routers
+app.include_router(v1_router)
 
 if __name__ == "__main__":
     import uvicorn
+    
     port = int(os.environ.get('PORT', 8001))
-    # for development, use reload=True
-    uvicorn.run(app, host="0.0.0.0", port=port)
-    # for production
-    # gunicorn.run(app, 
-    #              host="0.0.0.0",  # bind to all interfaces
-    #              port=port, 
-    #              workers=4,  # independent of CPU cores
-    #              timeout=120,  # if a request takes longer than this, it will be terminated
-    #              threads=4,  # for handling multiple requests concurrently no parallelism
-    #              worker_class="uvicorn.workers.UvicornWorker")
+    host = os.environ.get('HOST', '0.0.0.0')
+    reload = os.environ.get('ENV', 'PROD') == 'LOCAL'
+    
+    logger.info(f"Starting server on {host}:{port} (reload={reload})")
+    
+    uvicorn.run(
+        "main:app",
+        host=host,
+        port=port,
+        reload=reload,
+        log_level=config.log_level.lower()
+    )
