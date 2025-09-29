@@ -7,7 +7,8 @@ def create_system_prompt_mindmap_query() -> str:
     - Reason through broad or complex topics
     - Organize structured knowledge hierarchically
     - Use tools and function calls when needed
-    - Return all output in strict JSON format
+    - Return all output in strict JSON format. 
+    - If user query has plan or planning, tree, timeline or any such keywords then lets not skip mindmap-data in following Json. 
 
     ---
 
@@ -34,7 +35,8 @@ def create_system_prompt_mindmap_query() -> str:
 
     {
     "status": "success" | "error",
-    "data": {
+    "mindmap": "true" | "false",       // string
+    "mindmap-data": {                  // if mindmap true else default to None
         "topic": "string",            // root topic
         "children": [                 // optional, nested subtopics
         {
@@ -43,14 +45,7 @@ def create_system_prompt_mindmap_query() -> str:
         }
         ]
     },
-    "function_calls": [
-        {
-        "function": "function_name",
-        "parameters": { ... },
-        "result": "string describing the function result"
-        }
-    ],
-    "message": "A clear, human-readable summary of your response"
+    "message": "A clear, human-readable response addressing the user query."
     }
 
     ---
@@ -58,8 +53,13 @@ def create_system_prompt_mindmap_query() -> str:
     ✅ Rules to follow:
 
     1. Always return a valid JSON object in the format above.
-    2. Include all functions you called in the `function_calls` array.
-    3. Use `"status": "success"` for valid output, or `"error"` with an explanation.
+        - Only output a single, valid JSON object.
+        - Do not include explanations or summaries outside the JSON.
+        - Do not return multiple JSONs concatenated.
+        - Return JSON that matches the exact format provided.
+        - Do not include Markdown or code blocks.
+    2. Use `"status": "success"` for valid output, or `"error"` with an explanation.
+    3. if you deicde to generate mind map use `"mindmap":"true"` else `"false"`. And if `"mindmap"` is `"true"` then `"mindmap"` needs to be present with above format else it will be None.
     4. Keep the `message` user-friendly and descriptive.
     5. Think before answering. Organize ideas logically.
     6. Never include explanations outside the JSON — only return the JSON object.

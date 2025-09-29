@@ -2,7 +2,8 @@ expected_schema_mindmap_query = {
     "type": "object",
     "properties": {
         "status": {"type": "string", "enum": ["success", "error"]},
-        "data": {
+        "mindmap" : {"type":"string", "enum": ["true", "false"]},
+        "mindmap-data": {
             "type": "object",
             "properties": {
                 "topic": {"type": "string"},
@@ -13,16 +14,17 @@ expected_schema_mindmap_query = {
                             "topic": {"type": "string"},
                             "children": {
                                 "type": "array",
-                                "items": {"$ref": "#/properties/data/properties/children/items"}
+                                "items": {"$ref": "#/properties/mindmap-data/properties/children/items"}
                             }
                         },
                         "required": ["topic"],
                         "additionalProperties": False
                     }
                 }
-            }
+            },
+            "required" : ["topic"],
         },
         "message": {"type": "string"}
     },
-    "required": ["status", "data", "message"]
+    "required": ["status", "mindmap", "message"]
 }

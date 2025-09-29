@@ -16,6 +16,21 @@ if os.getenv('ENV', 'PROD') == "LOCAL":
 
 # The database connection for production
 else:
+
+    # if we enale sql connection in cloud run 
+    # Cloud Run provides the connection via Unix socket
+    # Format: postgresql+asyncpg:///DATABASE_NAME?host=/cloudsql/CONNECTION_NAME
+    # UNIX_SOCKET_PATH = f"/cloudsql/{os.getenv('CONNECTION_NAME')}"
+    
+    # DATABASE_URL = (
+    #     f"postgresql+asyncpg://{os.getenv('DB_USER_PROD')}@"
+    #     f"/{os.getenv('DB_NAME')}?host={UNIX_SOCKET_PATH}"
+    # )
+    
+    # engine = create_async_engine(DATABASE_URL, echo=False)
+
+    # using google.sql connector
+
     # Initialize a Connector object
     connector = Connector(IPTypes.PRIVATE if CONNECTION_NAME.split(':')[-1].lower() == 'private' else IPTypes.PUBLIC)
 

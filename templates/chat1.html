@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mindmap Chatbot</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jsMind CSS + JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsmind@0.9.0/style/jsmind.css">
+
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jsmind@0.9.0/es6/jsmind.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/jsmind@0.9.0/jsmind.js"></script>
+
+    <style>
+        body {
+            background-color: #f1f3f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .chat-history {
+            margin-bottom: 1.5rem;
+        }
+
+        .chat-msg {
+            margin-bottom: 1rem;
+        }
+
+        .user-msg {
+            text-align: right;
+            color: #0d6efd;
+        }
+
+        .bot-msg {
+            text-align: left;
+            color: #495057;
+            font-style: italic;
+        }
+
+        /* Remove mindmap wrapper box styles */
+        .mindmap-section {
+            margin-top: 2rem;
+            padding: 0;
+            border: none;
+            background: transparent;
+        }
+
+        /* Let mindmap expand fully */
+        .mindmap-container {
+            width: 100%;
+            min-height: 500px;
+            height: auto;
+        }
+
+        /* Chat form layout */
+        .chat-form {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-4 chat-container">
+    <h2 class="mb-4">🧠 Mindmap Chatbot</h2>
+
+    <!-- Chat History -->
+    <div class="chat-history mb-3" id="chat-box">
+        {% for msg in chat_log %}
+            <div class="chat-msg {{ 'user-msg' if msg.role == 'user' else 'bot-msg' }}">
+                <strong>{{ msg.role.capitalize() }}:</strong> {{ msg.content }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- User Input -->
+    <form id="chat-form" class="chat-form input-group">
+        <input type="text" id="user-input" class="form-control" placeholder="Ask your question..." required />
+        <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+
+    <!-- Mindmaps -->
+    <div id="mindmaps-container"></div>
+</div>
+
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+    const mindmapsContainer = document.getElementById('mindmaps-container');
+
+    const userId = "{{ user_id }}";
+    const chatId = "{{ chat_id }}";
+    const sessionId = "{{ session_id }}";
+
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const query = userInput.value.trim();
+        if (!query) return;
+
+        appendMessage('user', query);
+        userInput.value = '';
+
+        const payload = {
+            user_query: query,
+            user_id: String(userId),
+            chat_id: Number(chatId),
+            session_id: String(sessionId)
+        };
+
+        try {
+            const res = await fetch('/api/v1/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            appendMessage('assistant', data.message || '[No message]');
+
+            if (data['mindmap'] && Object.keys(data["mindmap"]).length > 0) {
+                addMindmap(data['mindmap']);
+            }
+
+        } catch (err) {
+            console.error('❌ API error:', err);
+            appendMessage('assistant', 'Something went wrong.');
+        }
+    });
+
+    function appendMessage(role, content) {
+        const div = document.createElement('div');
+        div.className = `chat-msg ${role === 'user' ? 'user-msg' : 'bot-msg'}`;
+        div.innerHTML = `<strong>${role.charAt(0).toUpperCase() + role.slice(1)}:</strong> ${content}`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function addMindmap(mindmapData) {
+        const id = 'mindmap_' + Date.now();
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mindmap-section';
+        wrapper.innerHTML = `
+            <h4 class="mb-3">🧠 Generated Mindmap</h4>
+            <div id="${id}" class="mindmap-container"></div>
+        `;
+        mindmapsContainer.appendChild(wrapper);
+
+        const jm = new jsMind({
+            container: id,
+            theme: 'orange',
+            editable: false
+        });
+
+        jm.show(mindmapData);
+    }
+</script>
+</body>
+</html>

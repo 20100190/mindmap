@@ -1,0 +1,104 @@
+/* Chat Box Styles */
+.chat-box {
+    max-height: none;
+    overflow-y: visible;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.user-msg { 
+    text-align: right;
+    color: #0d6efd; 
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: rgba(13, 110, 253, 0.1);
+    border-radius: 12px 12px 4px 12px;
+    margin-left: 20%;
+}
+
+.bot-msg { 
+    text-align: left; 
+    font-style: italic; 
+    color: #495057;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: rgba(108, 117, 125, 0.1);
+    border-radius: 12px 12px 12px 4px;
+    margin-right: 20%;
+}
+
+/* Loading Message Styles */
+.loading-msg {
+    text-align: left;
+    color: #6c757d;
+    font-style: italic;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: rgba(108, 117, 125, 0.05);
+    border-radius: 12px 12px 12px 4px;
+    margin-right: 20%;
+    border: 1px dashed #dee2e6;
+}
+
+.loading-msg .spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    margin-left: 8px;
+}
+
+/* Button Loading State */
+#send-btn {
+    transition: all 0.2s ease-in-out;
+    min-width: 80px;
+    position: relative;
+}
+
+#send-btn:disabled {
+    cursor: not-allowed;
+}
+
+#send-btn .btn-text,
+#send-btn .spinner-border {
+    transition: opacity 0.15s ease-in-out;
+}
+
+/* Mindmap Container */
+.mindmap-container {
+    width: 100%;
+    height: 300px;
+    min-height: 300px;
+    overflow: visible !important;
+    position: relative;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: #fff;
+    margin: 10px 0;
+}
+
+/* Mindmap Scaling */
+.mindmap-container canvas,
+.mindmap-container jmnodes {
+    transform: scale(0.8);
+    transform-origin: top left;
+}
+
+/* Input Focus States */
+#user-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    border-color: #86b7fe;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .user-msg, .bot-msg, .loading-msg {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    
+    .mindmap-container {
+        height: 250px;
+        min-height: 250px;
+    }
+}

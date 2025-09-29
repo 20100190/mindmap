@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mindmap Chatbot</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons for spinner -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- jsMind CSS + JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsmind@0.9.0/style/jsmind.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsmind@0.9.0/es6/jsmind.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="container py-4">
+
+    <h2>Mindmap Chatbot</h2>
+
+    <!-- Chat History -->
+    <div class="chat-box mb-3" id="chat-box">
+        {% for msg in chat_log %}
+            <div class="{{ 'user-msg' if msg.role == 'user' else 'bot-msg' }}">
+                <strong>{{ msg.role.capitalize() }}:</strong> {{ msg.content }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- User Input -->
+    <form id="chat-form" class="input-group mb-3">
+        <input type="text" id="user-input" class="form-control" placeholder="Ask your question..." required />
+        <button class="btn btn-primary" type="submit" id="send-btn">
+            <span class="btn-text">Send</span>
+            <div class="spinner-border spinner-border-sm d-none" role="status" id="btn-spinner">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </button>
+    </form>
+
+    <!-- Hidden template variables -->
+    <script>
+        window.templateVars = {
+            userId: "{{ user_id }}",
+            chatId: "{{ chat_id }}",
+            sessionId: "{{ session_id }}"
+        };
+    </script>
+
+    <!-- Custom JavaScript -->
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
