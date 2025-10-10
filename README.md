@@ -1,3 +1,4 @@
+```
 mindmap/
 ├── main.py                         # ✅ FastAPI app entrypoint (includes routers)
 │
@@ -51,3 +52,4 @@ mindmap/
 ├── cloudbuild.yaml                 # ✅ Cloud Build config (if using GCP)
 ├── alembic.ini                     # ✅ Alembic DB settings
 └── README.md
+```
