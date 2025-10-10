@@ -1,6 +1,8 @@
 # MindMap
 ---
 
+[mindmap-app](https://test-mindmap-chtbot.duckdns.org/api/v1/chat)
+
 A FastAPI-based app that handles LLM-powered mindmap generation, database logging, and GCS integration. 
 This repo includes modular services, clean architecture, and Docker support for easy deployment.
 
