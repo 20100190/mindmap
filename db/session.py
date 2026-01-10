@@ -7,56 +7,57 @@ import os
 
 CONNECTION_NAME = os.environ.get("CONNECTION_NAME")
 
-if os.getenv('ENV', 'PROD') == "LOCAL":
-    DATABASE_URL = (
-        f"postgresql+asyncpg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-    )
-    engine = create_async_engine(DATABASE_URL, echo=False)
+# if os.getenv('ENV', 'PROD') == "LOCAL":
+#     DATABASE_URL = (
+#         f"postgresql+asyncpg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
+#         f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+#     )
+#     engine = create_async_engine(DATABASE_URL, echo=False)
 
-# The database connection for production
-else:
+# # The database connection for production
+# else:
 
-    # if we enale sql connection in cloud run 
-    # Cloud Run provides the connection via Unix socket
-    # Format: postgresql+asyncpg:///DATABASE_NAME?host=/cloudsql/CONNECTION_NAME
-    # UNIX_SOCKET_PATH = f"/cloudsql/{os.getenv('CONNECTION_NAME')}"
+#     # if we enale sql connection in cloud run 
+#     # Cloud Run provides the connection via Unix socket
+#     # Format: postgresql+asyncpg:///DATABASE_NAME?host=/cloudsql/CONNECTION_NAME
+#     # UNIX_SOCKET_PATH = f"/cloudsql/{os.getenv('CONNECTION_NAME')}"
     
-    # DATABASE_URL = (
-    #     f"postgresql+asyncpg://{os.getenv('DB_USER_PROD')}@"
-    #     f"/{os.getenv('DB_NAME')}?host={UNIX_SOCKET_PATH}"
-    # )
+#     # DATABASE_URL = (
+#     #     f"postgresql+asyncpg://{os.getenv('DB_USER_PROD')}@"
+#     #     f"/{os.getenv('DB_NAME')}?host={UNIX_SOCKET_PATH}"
+#     # )
     
-    # engine = create_async_engine(DATABASE_URL, echo=False)
+#     # engine = create_async_engine(DATABASE_URL, echo=False)
 
-    # using google.sql connector
+#     # using google.sql connector
 
-    # Initialize a Connector object
-    connector = Connector(IPTypes.PRIVATE if CONNECTION_NAME.split(':')[-1].lower() == 'private' else IPTypes.PUBLIC)
+#     # Initialize a Connector object
+#     connector = Connector(IPTypes.PRIVATE if CONNECTION_NAME.split(':')[-1].lower() == 'private' else IPTypes.PUBLIC)
 
-    # A function to get a connection from the connector
-    # asyncpg is the driver for asynchronous connections
-    async def get_async_connection():
-        return await connector.connect_async(
-            CONNECTION_NAME,
-            driver="asyncpg",
-            user=os.getenv('DB_USER_PROD'),
-            db=os.getenv('DB_NAME'),
-            enable_iam_auth=True,
-        )
+#     # A function to get a connection from the connector
+#     # asyncpg is the driver for asynchronous connections
+#     async def get_async_connection():
+#         return await connector.connect_async(
+#             CONNECTION_NAME,
+#             driver="asyncpg",
+#             user=os.getenv('DB_USER_PROD'),
+#             db=os.getenv('DB_NAME'),
+#             enable_iam_auth=True,
+#         )
 
-    # SQLAlchemy async engine using custom connection
-    engine = create_async_engine(
-        "postgresql+asyncpg://",  # Leave blank, overridden by creator
-        async_creator=get_async_connection,
-        echo=False,
-    )
+#     # SQLAlchemy async engine using custom connection
+#     engine = create_async_engine(
+#         "postgresql+asyncpg://",  # Leave blank, overridden by creator
+#         async_creator=get_async_connection,
+#         echo=False,
+#     )
 
-async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+# async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 Base = declarative_base()
 
 # Dependency for FastAPI
 async def get_db() -> AsyncSession:
-    async with async_session() as session:
-        yield session
+    # async with async_session() as session:
+    #     yield session
+    yield None

@@ -13,7 +13,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
-from logs_management.log_manager import setup_logging #, correlation_context, log_error
+from logs_management.log_manager import setup_logging 
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from api.v1 import v1_router

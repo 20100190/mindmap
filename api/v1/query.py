@@ -10,7 +10,7 @@ from fastapi import Request, APIRouter
 
 from db.models import QueryLog
 from chat_log_cache.chat_log import chat_logs_cache
-from util.gcs_util import upload_result_to_gcs, save_to_sql_db  # ← utility we’ll extract
+# from util.gcs_util import upload_result_to_gcs, save_to_sql_db  # ← utility we’ll extract
 
 
 import logging
@@ -58,8 +58,8 @@ async def query_endpoint(
 
         
         json_filename = f"query_result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        background_tasks.add_task(upload_result_to_gcs, response.get("chat_log", []), json_filename)
-        background_tasks.add_task(save_to_sql_db, log_entry, db)
+        # background_tasks.add_task(upload_result_to_gcs, response.get("chat_log", []), json_filename)
+        # background_tasks.add_task(save_to_sql_db, log_entry, db)
 
         return {
             "mindmap": response.get("mindmap", {}),

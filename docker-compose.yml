@@ -15,8 +15,8 @@ services:
       - OPENAI_MODEL_NAME=${OPENAI_MODEL_NAME}
     networks:
       - app-network
-    expose:
-      - "8000"
+    ports:
+      - "8080:8080"
 
   nginx:
     image: nginx:alpine
